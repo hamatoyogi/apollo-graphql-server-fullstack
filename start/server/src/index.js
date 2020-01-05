@@ -1,4 +1,5 @@
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer } = require('apollo-server');
+const { MemcachedCache } = require('apollo-server-cache-memcached');
 const isEmail = require('isemail');
 const typeDefs = require('./schema')
 const { createStore } = require('./utils')
@@ -28,7 +29,13 @@ const server = new ApolloServer({
     launchAPI: new LaunchAPI(),
     userAPI: new UserAPI({ store }),
     locationAPI: new LocationAPI()
-  })
+  }),
+  persistedQueries: {
+    cache: new MemcachedCache(
+      ['memcached-server-1', 'memcached-server-2', 'memcached-server-3'],
+      { retries: 10, retry: 10000 }, // Options
+    ),
+  },
 })
 
 server.listen().then(({ url }) => {

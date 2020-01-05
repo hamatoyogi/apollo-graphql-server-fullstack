@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 const typeDefs = gql`
   #custom CT API location
 
-  type Location {
+  type Location @cacheControl(maxAge: 2000){
     parentName: String
     parentKgID: String
     kgID: String
@@ -74,7 +74,7 @@ const typeDefs = gql`
     LARGE
   }
 
-  type Query {
+  type Query @cacheControl(maxAge: 240){
     launches(
       """
       The number of results to show. Must be >= 1. Default = 20
